@@ -38,6 +38,10 @@
       </div>
     </div>
 
+    <div class="mobile-lesson-picker card" style="padding:0.85rem">
+      <label for="mobileLessonSelect">اختر الدرس مباشرة:</label>
+      <select id="mobileLessonSelect" class="select"></select>
+    </div>
     <div class="split-layout">
       <aside id="lessonList" class="list-stack" style="max-height:78vh;overflow-y:auto;padding-inline-end:4px" aria-label="قائمة الدروس"></aside>
       <article id="lessonViewer" class="card"></article>
@@ -86,6 +90,10 @@
       listEl.querySelectorAll('[data-lid]').forEach(b => b.addEventListener('click', () => {
         curLessonId = b.dataset.lid; curTab = 0; renderLessons();
       }));
+      const mobSel = document.getElementById('mobileLessonSelect');
+      if (mobSel) {
+        mobSel.innerHTML = list.map((l, i) => `<option value="${l.id}" ${l.id === curLessonId ? 'selected' : ''}>درس ${i + 1}: ${l.title}</option>`).join('');
+      }
 
       const idx = LESSONS_DATA.findIndex(x => x.id === curLessonId);
       const l = LESSONS_DATA[idx >= 0 ? idx : 0];
@@ -201,6 +209,10 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('#lvlFilters .pill').forEach(p => p.addEventListener('click', () => { curLvl = p.dataset.lvl; renderLessons(); }));
+      const mobSelInit = document.getElementById('mobileLessonSelect');
+      if (mobSelInit) {
+        mobSelInit.addEventListener('change', (e) => { curLessonId = e.target.value; curTab = 0; renderLessons(); });
+      }
       renderLessons();
     });
   </script>

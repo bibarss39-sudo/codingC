@@ -218,8 +218,16 @@ function renderSharedChrome(activePage) {
       renderSharedChrome(activePage);
     });
 
-    document.getElementById('mobileMenuBtn').addEventListener('click', () => {
-      document.getElementById('navLinks').classList.toggle('open');
+    const navEl = document.getElementById('navLinks');
+    const mobBtn = document.getElementById('mobileMenuBtn');
+    mobBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navEl.classList.toggle('open');
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#navLinks') && !e.target.closest('#mobileMenuBtn')) {
+        navEl.classList.remove('open');
+      }
     });
   }
 
