@@ -1321,3 +1321,24 @@ pre.code-block {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Guaranteed High-Contrast Dark Mode Fix */
+html.dark, html.dark body {
+  background-color: #131922 !important;
+  color: #eef2f7 !important;
+}
+html.dark h1, html.dark h2, html.dark h3, html.dark strong, html.dark .brand {
+  color: #f1f5f9 !important;
+}
+html.dark p, html.dark li, html.dark .muted {
+  color: #cbd5e1;
+}
+html.dark .btn-soft {
+  color: #e2e8f0;
+  border-color: #3d4d66;
+}
+html.dark .site-footer {
+  color: #94a3b8;
+  background: #1b2330;
+}
