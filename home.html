@@ -41,6 +41,10 @@
     <div class="mobile-lesson-picker card" style="padding:0.85rem">
       <label for="mobileLessonSelect">اختر الدرس مباشرة:</label>
       <select id="mobileLessonSelect" class="select"></select>
+      <div class="mobile-lesson-controls">
+        <button type="button" id="mobPrevLesson" class="btn btn-soft btn-sm" style="flex:1">→ الدرس السابق</button>
+        <button type="button" id="mobNextLesson" class="btn btn-primary btn-sm" style="flex:1">الدرس التالي ←</button>
+      </div>
     </div>
     <div class="split-layout">
       <aside id="lessonList" class="list-stack" style="max-height:78vh;overflow-y:auto;padding-inline-end:4px" aria-label="قائمة الدروس"></aside>
@@ -49,6 +53,7 @@
   </main>
   <footer id="siteFooter"></footer>
   <script src="./core.js"></script>
+  <script src="./i18n.js"></script>
   <script src="./lessons-data.js"></script>
   <script>
     renderSharedChrome('home.html');
@@ -211,7 +216,15 @@
       document.querySelectorAll('#lvlFilters .pill').forEach(p => p.addEventListener('click', () => { curLvl = p.dataset.lvl; renderLessons(); }));
       const mobSelInit = document.getElementById('mobileLessonSelect');
       if (mobSelInit) {
-        mobSelInit.addEventListener('change', (e) => { curLessonId = e.target.value; curTab = 0; renderLessons(); });
+        mobSelInit.addEventListener('change', (e) => { curLessonId = e.target.value; curTab = 0; renderLessons(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+        document.getElementById('mobPrevLesson').addEventListener('click', () => {
+          const i = LESSONS_DATA.findIndex(x => x.id === curLessonId);
+          if (i > 0) { curLessonId = LESSONS_DATA[i - 1].id; curTab = 0; renderLessons(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        });
+        document.getElementById('mobNextLesson').addEventListener('click', () => {
+          const i = LESSONS_DATA.findIndex(x => x.id === curLessonId);
+          if (i < LESSONS_DATA.length - 1) { curLessonId = LESSONS_DATA[i + 1].id; curTab = 0; renderLessons(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        });
       }
       renderLessons();
     });

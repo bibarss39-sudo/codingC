@@ -237,3 +237,101 @@ function renderSharedChrome(activePage) {
     footer.innerHTML = `Algorithmes &amp; C — منصة تعليمية متكاملة لطلاب لغة C • <strong>bibarss39</strong> • تصميم هادئ للتركيز والفهم العميق`;
   }
 }
+
+
+/* Mobile Back Button, Prev/Next Page Pager & Fixed Bottom App Bar */
+(function () {
+  const PAGE_ORDER = [
+    { href: 'index.html', title: 'الرئيسية' },
+    { href: 'asasi.html', title: 'بوابة الأساسيات' },
+    { href: 'home.html', title: 'الدروس التفاعلية' },
+    { href: 'keywords.html', title: 'قاموس C ↔ Algo' },
+    { href: 'amtla.html', title: 'مكتبة الأمثلة' },
+    { href: 't.html', title: 'التمارين والمختبر' },
+    { href: 'nn.html', title: 'المساعد الذكي AI' },
+    { href: 'i5.html', title: 'اختصارات Code::Blocks' },
+    { href: 'apps.html', title: 'أدوات التطوير' },
+    { href: 'ms.html', title: 'المصادر والمراجع' },
+    { href: 'y.html', title: 'الشروحات المرئية' },
+    { href: 'contact.html', title: 'تواصل معنا' }
+  ];
+
+  const BOTTOM_TABS = [
+    { href: 'index.html', label: 'الرئيسية', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>' },
+    { href: 'home.html', label: 'الدروس', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>' },
+    { href: 'keywords.html', label: 'القاموس', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>' },
+    { href: 'amtla.html', label: 'الأمثلة', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></svg>' },
+    { href: 'nn.html', label: 'الذكاء AI', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' }
+  ];
+
+  const origRender = window.renderSharedChrome;
+  window.renderSharedChrome = function (activePage) {
+    origRender(activePage);
+
+    const main = document.querySelector('main.container');
+    const idx = PAGE_ORDER.findIndex(p => p.href === activePage);
+
+    if (main && activePage !== 'index.html' && !document.getElementById('pageBackBar')) {
+      const curTitle = idx >= 0 ? PAGE_ORDER[idx].title : '';
+      const bar = document.createElement('div');
+      bar.id = 'pageBackBar';
+      bar.className = 'page-back-bar';
+      bar.innerHTML = `
+        <div style="display:flex;align-items:center;gap:0.5rem">
+          <button type="button" id="smartBackBtn" class="back-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            <span>رجوع</span>
+          </button>
+          <a href="index.html" class="back-btn" style="font-weight:600;color:var(--text-muted)">الرئيسية / <strong style="color:var(--primary)">${curTitle}</strong></a>
+        </div>
+        <div class="font-ctrl" style="display:inline-flex" title="تغيير حجم الخط">
+          <button type="button" id="mFontDec" aria-label="تصغير الخط">A-</button>
+          <button type="button" id="mFontInc" aria-label="تكبير الخط">A+</button>
+        </div>`;
+      main.insertBefore(bar, main.firstChild);
+
+      document.getElementById('smartBackBtn').addEventListener('click', () => {
+        if (window.history.length > 1 && document.referrer) window.history.back();
+        else window.location.href = 'index.html';
+      });
+      document.getElementById('mFontDec').addEventListener('click', () => {
+        window.appState.fontSize = Math.max(14, (window.appState.fontSize || 16) - 1);
+        saveAppState(window.appState);
+        document.documentElement.style.setProperty('--user-font-size', window.appState.fontSize + 'px');
+      });
+      document.getElementById('mFontInc').addEventListener('click', () => {
+        window.appState.fontSize = Math.min(21, (window.appState.fontSize || 16) + 1);
+        saveAppState(window.appState);
+        document.documentElement.style.setProperty('--user-font-size', window.appState.fontSize + 'px');
+      });
+    }
+
+    if (main && idx >= 0 && !document.getElementById('pagePager')) {
+      const prev = idx > 0 ? PAGE_ORDER[idx - 1] : null;
+      const next = idx < PAGE_ORDER.length - 1 ? PAGE_ORDER[idx + 1] : null;
+      const pager = document.createElement('nav');
+      pager.id = 'pagePager';
+      pager.className = 'page-pager';
+      pager.setAttribute('aria-label', 'التنقل بين الصفحات');
+      pager.innerHTML = `
+        ${prev ? `<a href="${prev.href}" class="pager-link"><span class="pager-sub">→ الصفحة السابقة</span><span class="pager-title">${prev.title}</span></a>` : '<div></div>'}
+        ${next ? `<a href="${next.href}" class="pager-link" style="text-align:end"><span class="pager-sub">الصفحة التالية ←</span><span class="pager-title">${next.title}</span></a>` : '<div></div>'}
+      `;
+      main.appendChild(pager);
+    }
+
+    let bNav = document.getElementById('mobileBottomNav');
+    if (!bNav) {
+      bNav = document.createElement('nav');
+      bNav.id = 'mobileBottomNav';
+      bNav.className = 'mobile-bottom-nav';
+      bNav.setAttribute('aria-label', 'شريط التنقل السفلي');
+      document.body.appendChild(bNav);
+    }
+    bNav.innerHTML = BOTTOM_TABS.map(t => `
+      <a href="${t.href}" class="mb-nav-item ${t.href === activePage ? 'active' : ''}">
+        ${t.icon}
+        <span>${t.label}</span>
+      </a>`).join('');
+  };
+})();
