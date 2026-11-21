@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>المساعد الذكي AI | Algorithmes &amp; C</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  
+</head>
+<body>
+  <header id="siteHeader"></header>
+  <main class="container">
+    
+<div class="toolbar">
+  <div>
+    <h2 style="margin:0">المساعد الذكي C-Mentor AI 2.0</h2>
+    <span class="muted">يفهم العربية والدارجة والفرنسية والإنجليزية — يشرح المفاهيم، يصحح أكواد C، يقارن المفاهيم، ويختبرك.</span>
+  </div>
+  <button id="clearAiBtn" class="btn btn-soft btn-sm">محادثة جديدة</button>
+</div>
+
+<div class="pill-group" style="margin-bottom:0.85rem">
+  <button class="pill ai-quick" data-p="اشرح لي المؤشرات (pointers)">شرح المؤشرات</button>
+  <button class="pill ai-quick" data-p="ما الفرق بين malloc و calloc؟">malloc vs calloc</button>
+  <button class="pill ai-quick" data-p="ما الفرق بين التمرير بالقيمة والمرجع؟">القيمة vs المرجع</button>
+  <button class="pill ai-quick" data-p="كيفاش نخدم بالقوائم المترابطة linked list؟">القوائم المترابطة</button>
+  <button class="pill ai-quick" data-p="ما سبب خطأ Segmentation Fault؟">حل Segmentation Fault</button>
+  <button class="pill ai-quick" data-p="اختبرني بسؤال في لغة C">اختبرني الآن</button>
+</div>
+
+<div class="chat-box">
+  <div id="chatMsgs" class="chat-messages"></div>
+  <div class="chat-input-bar">
+    <textarea id="chatInput" rows="2" placeholder="اكتب سؤالك هنا أو الصق كود C لتصحيحه..."></textarea>
+    <button id="chatSend" class="btn btn-primary">إرسال</button>
+  </div>
+</div>
+
+<script>
+  function addMsg(html, role, nextBtns = []) {
+    const box = document.getElementById('chatMsgs');
+    const div = document.createElement('div');
+    div.className = `msg ${role === 'user' ? 'msg-user' : 'msg-bot'}`;
+    div.innerHTML = role === 'user' ? escapeHtml(html) : html;
+    if (role === 'bot' && nextBtns.length) {
+      const row = document.createElement('div');
+      row.className = 'pill-group';
+      row.style.marginTop = '0.7rem';
+      nextBtns.forEach(txt => {
+        const b = document.createElement('button');
+        b.className = 'pill';
+        b.textContent = txt;
+        b.addEventListener('click', () => sendMsg(txt));
+        row.appendChild(b);
+      });
+      div.appendChild(row);
+    }
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function sendMsg(custom) {
+    const inp = document.getElementById('chatInput');
+    const txt = (custom !== undefined ? custom : inp.value).trim();
+    if (!txt) return;
+    if (custom === undefined) inp.value = '';
+    addMsg(txt, 'user');
+    setTimeout(() => {
+      const res = window.cMentorReply(txt);
+      addMsg(res.html, 'bot', res.next);
+    }, 350);
+  }
+
+  function bootChat() {
+    document.getElementById('chatMsgs').innerHTML = '';
+    addMsg('مرحباً بك في <strong>C-Mentor AI 2.0</strong> 👋<br/>اسألني عن أي درس في لغة C أو الخوارزميات، أو الصق كوداً به خطأ لأكتشفه وأشرحه لك خطوة بخطوة.', 'bot', ['اشرح لي المؤشرات', 'ما الفرق بين Stack و Heap؟', 'اختبرني بسؤال في لغة C']);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('chatSend').addEventListener('click', () => sendMsg());
+    document.getElementById('chatInput').addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); } });
+    document.querySelectorAll('.ai-quick').forEach(b => b.addEventListener('click', () => sendMsg(b.dataset.p)));
+    document.getElementById('clearAiBtn').addEventListener('click', bootChat);
+    bootChat();
+  });
+</script>
+
+  </main>
+  <footer id="siteFooter"></footer>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/ai-engine.js"></script>
+  <script>
+    renderSharedChrome('nn.html');
+  </script>
+</body>
+</html>

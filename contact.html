@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تواصل معنا | Algorithmes &amp; C</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  
+</head>
+<body>
+  <header id="siteHeader"></header>
+  <main class="container">
+    
+<div class="card" style="max-width:680px;margin:0 auto">
+  <span class="badge">تواصل معنا • Contact</span>
+  <h1 style="margin-top:0.5rem">أرسل اقتراحك أو استفسارك</h1>
+  <p class="muted" style="margin-bottom:1.25rem">هل لديك مثال برمجي تود إضافته للمنصة أو ملاحظة لتحسين الدروس؟ يسعدنا تواصلك.</p>
+  <form id="contactForm" style="display:flex;flex-direction:column;gap:0.85rem">
+    <input id="cName" class="input" type="text" required placeholder="الاسم الكامل" />
+    <input id="cEmail" class="input" type="email" required placeholder="البريد الإلكتروني" />
+    <textarea id="cMsg" class="input" rows="5" required placeholder="اكتب رسالتك أو اقتراحك هنا..."></textarea>
+    <div class="btn-row" style="margin-top:0.25rem">
+      <button type="submit" class="btn btn-primary">إرسال الرسالة</button>
+      <a href="https://github.com/bibarss39-sudo/bibarss39" target="_blank" rel="noopener" class="btn btn-soft">مستودع GitHub</a>
+    </div>
+  </form>
+  <div id="cStatus" style="margin-top:1rem"></div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.getElementById('cStatus').innerHTML = `<div class="callout callout-ok">✅ شكراً لتواصلك يا <strong>${escapeHtml(document.getElementById('cName').value)}</strong>! تم تسجيل رسالتك بنجاح.</div>`;
+      e.target.reset();
+    });
+  });
+</script>
+
+  </main>
+  <footer id="siteFooter"></footer>
+  <script src="assets/js/core.js"></script>
+  
+  <script>
+    renderSharedChrome('contact.html');
+  </script>
+</body>
+</html>

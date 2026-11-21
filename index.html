@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الرئيسية | Algorithmes &amp; C</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header id="siteHeader"></header>
+  <main class="container">
+    
+<section class="hero">
+  <div>
+    <span class="badge">تصميم هادئ للتركيز • Algorithmes &amp; C</span>
+    <h1>تعلّم لغة C والخوارزميات بفهم عميق وواجهة سهلة</h1>
+    <p class="muted prose">
+      منصة متكاملة لطلاب الإعلام الآلي: 18 درساً مشروحاً سطراً بسطر بتشبيهات واقعية، قاموس شامل لأوامر لغة C وتحويلها للخوارزميات، مكتبة 26 مثالاً عملياً، محاكي ذاكرة ومصحح أكواد، ومساعد الذكاء الاصطناعي C-Mentor.
+    </p>
+    <div class="btn-row">
+      <a href="home.html" class="btn btn-primary">ابدأ الدروس المشروحة</a>
+      <a href="keywords.html" class="btn btn-sage">قاموس C ↔ Algorithme</a>
+      <a href="amtla.html" class="btn btn-soft">مكتبة 26 مثالاً</a>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="stat-box"><div id="stLessons" class="stat-val">0/18</div><div class="stat-lbl">الدروس المكتملة</div></div>
+    <div class="stat-box"><div class="stat-val">50</div><div class="stat-lbl">أمر في قاموس C↔Algo</div></div>
+    <div class="stat-box"><div class="stat-val">26</div><div class="stat-lbl">مثال كود عملي</div></div>
+    <div class="stat-box"><div id="stXp" class="stat-val">0</div><div class="stat-lbl">نقاط الخبرة XP</div></div>
+  </div>
+</section>
+
+<h2 style="margin-bottom:1rem">ابدأ من القسم الذي تحتاجه</h2>
+<div class="grid-3">
+  <a href="home.html" class="card card-hover">
+    <span class="badge">18 درساً عميقاً</span>
+    <h3 style="margin-top:0.55rem">الدروس التفاعلية</h3>
+    <p class="muted">تشبيه واقعي، شرح كل سطر برمجي، التحويل للخوارزمية، الأخطاء الشائعة وتمرين محلول.</p>
+  </a>
+  <a href="keywords.html" class="card card-hover">
+    <span class="badge badge-sage">جديد</span>
+    <h3 style="margin-top:0.55rem">قاموس أوامر C ↔ الخوارزميات</h3>
+    <p class="muted">شرح مبسط لكل أمر (scanf، printf، for، malloc...) مع كيفية استعماله ومقابله في Algorithme.</p>
+  </a>
+  <a href="amtla.html" class="card card-hover">
+    <span class="badge">26 برنامجاً</span>
+    <h3 style="margin-top:0.55rem">مكتبة الأمثلة والأكواد</h3>
+    <p class="muted">أكواد جاهزة ومشروحة مع الخوارزمية والتعقيد الزمني Big-O والمخرجات المتوقعة.</p>
+  </a>
+  <a href="t.html" class="card card-hover">
+    <span class="badge badge-sand">تطبيق عملي</span>
+    <h3 style="margin-top:0.55rem">التمارين، محاكي الذاكرة والمختبر</h3>
+    <p class="muted">اختبارات تفاعلية، تتبع المؤشرات في RAM، ومصحح فوري لأخطاء كود C.</p>
+  </a>
+  <a href="nn.html" class="card card-hover">
+    <span class="badge">AI 2.0</span>
+    <h3 style="margin-top:0.55rem">المساعد الذكي C-Mentor</h3>
+    <p class="muted">يجيب بالعربية والدارجة والفرنسية والإنجليزية، يصحح أكوادك ويقارن المفاهيم.</p>
+  </a>
+  <a href="asasi.html" class="card card-hover">
+    <span class="badge badge-sage">خطة التعلم</span>
+    <h3 style="margin-top:0.55rem">بوابة الأساسيات والمراجع</h3>
+    <p class="muted">خريطة تعلم واضحة + اختصارات Code::Blocks وأدوات التطوير والشروحات المرئية.</p>
+  </a>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('stLessons').textContent = `${window.appState.completedLessons.length}/18`;
+    document.getElementById('stXp').textContent = window.appState.xp;
+  });
+</script>
+
+  </main>
+  <footer id="siteFooter"></footer>
+  <script src="assets/js/core.js"></script>
+  
+  <script>renderSharedChrome('index.html');</script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الدروس التفاعلية (18 درساً) | Algorithmes &amp; C</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header id="siteHeader"></header>
+  <main class="container">
+    <div class="toolbar">
+      <div style="flex:1;min-width:260px">
+        <span class="badge badge-sage">منهج متكامل • 18 درساً مشروحاً بعمق</span>
+        <h1 style="font-size:1.55rem;margin:0.3rem 0 0.2rem">الدروس التفاعلية المتدرجة في لغة C والخوارزميات</h1>
+        <p class="muted">تشبيه واقعي، قواعد واضحة، شرح الكود سطراً بسطر، التحويل للخوارزمية، أخطاء شائعة، وتمرين محلول.</p>
+      </div>
+      <div style="min-width:220px">
+        <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:5px">
+          <strong>تقدمك في المنهج</strong>
+          <span id="coursePctText" style="color:var(--primary);font-weight:700">0 / 18 (0%)</span>
+        </div>
+        <div class="progress-track"><div id="coursePctBar" class="progress-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="toolbar" style="padding:0.7rem 1rem">
+      <div class="pill-group" id="lvlFilters">
+        <button type="button" class="pill active" data-lvl="all">جميع الدروس (18)</button>
+        <button type="button" class="pill" data-lvl="1">المستوى 1: الأساسيات</button>
+        <button type="button" class="pill" data-lvl="2">المستوى 2: الدوال والمصفوفات</button>
+        <button type="button" class="pill" data-lvl="3">المستوى 3: المؤشرات والذاكرة</button>
+        <button type="button" class="pill" data-lvl="4">المستوى 4: الهياكل والبيانات</button>
+      </div>
+    </div>
+
+    <div class="split-layout">
+      <aside id="lessonList" class="list-stack" style="max-height:78vh;overflow-y:auto;padding-inline-end:4px" aria-label="قائمة الدروس"></aside>
+      <article id="lessonViewer" class="card"></article>
+    </div>
+  </main>
+  <footer id="siteFooter"></footer>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/lessons-data.js"></script>
+  <script>
+    renderSharedChrome('home.html');
+
+    let curLvl = new URLSearchParams(location.search).get('level') || 'all';
+    let curLessonId = 'l1';
+    let curTab = 0;
+
+    function codeFrame(label, htmlCode) {
+      return `<div class="code-frame"><div class="code-frame-bar"><span>${label}</span><span class="code-dots"><span></span><span></span><span></span></span></div><pre class="code-block">${htmlCode}</pre></div>`;
+    }
+
+    function updateCourseProgress() {
+      const done = window.appState.completedLessons.length;
+      const total = LESSONS_DATA.length;
+      const pct = Math.round((done / total) * 100);
+      document.getElementById('coursePctText').textContent = `${done} / ${total} (${pct}%)`;
+      document.getElementById('coursePctBar').style.width = `${pct}%`;
+    }
+
+    function renderLessons() {
+      updateCourseProgress();
+      document.querySelectorAll('#lvlFilters .pill').forEach(p => p.classList.toggle('active', p.dataset.lvl === curLvl));
+      const list = curLvl === 'all' ? LESSONS_DATA : LESSONS_DATA.filter(l => String(l.level) === curLvl);
+      if (!list.some(l => l.id === curLessonId) && list.length) curLessonId = list[0].id;
+
+      const listEl = document.getElementById('lessonList');
+      listEl.innerHTML = list.map((l, i) => {
+        const done = window.appState.completedLessons.includes(l.id);
+        return `<button type="button" class="list-item ${l.id === curLessonId ? 'active' : ''}" data-lid="${l.id}">
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;margin-bottom:4px">
+            <span class="badge">المستوى ${l.level}</span>
+            <span style="color:${done ? 'var(--sage)' : 'var(--text-muted)'};font-weight:700">${done ? 'مكتمل ✓' : `درس ${i + 1}`}</span>
+          </div>
+          <div style="font-weight:700;font-size:0.93rem;line-height:1.45">${l.title}</div>
+          <div class="muted" style="font-size:0.78rem;margin-top:2px">${l.fr}</div>
+        </button>`;
+      }).join('');
+      listEl.querySelectorAll('[data-lid]').forEach(b => b.addEventListener('click', () => {
+        curLessonId = b.dataset.lid; curTab = 0; renderLessons();
+      }));
+
+      const idx = LESSONS_DATA.findIndex(x => x.id === curLessonId);
+      const l = LESSONS_DATA[idx >= 0 ? idx : 0];
+      const done = window.appState.completedLessons.includes(l.id);
+      const tabs = ['1. الفهم والتشبيه', '2. شرح الكود سطراً بسطر', '3. الخوارزمية ↔ C', '4. أخطاء شائعة', '5. تمرين محلول'];
+
+      let body = '';
+      if (curTab === 0) {
+        body = `
+          <div class="goals-box prose">
+            <strong style="color:var(--primary)">هدف هذا الدرس:</strong>
+            <p style="margin-top:0.25rem">${l.summary}</p>
+          </div>
+          <div class="analogy-box prose">
+            <strong style="color:var(--sage)">تخيّل الفكرة ببساطة (تشبيه واقعي):</strong>
+            <p style="margin-top:0.35rem">${l.analogy}</p>
+          </div>
+          <h3 style="margin-top:1.1rem">أهم القواعد التي تحتاج فهمها:</h3>
+          <ul class="prose" style="padding-inline-start:1.3rem;display:flex;flex-direction:column;gap:0.6rem;margin-top:0.55rem">
+            ${l.deep.map(pt => `<li>${pt}</li>`).join('')}
+          </ul>
+          <div class="summary-30s prose">
+            <strong style="color:var(--sand)">خلاصة سريعة للتركيز:</strong> راجع الكود في التبويب التالي سطراً بسطر، ثم قارنه بالخوارزمية لتثبيت الفهم قبل الامتحان.
+          </div>`;
+      } else if (curTab === 1) {
+        body = `
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem">
+            <strong>الكود التطبيقي للدرس:</strong>
+            <button type="button" class="btn btn-soft btn-sm" id="copyLBtn">نسخ الكود</button>
+          </div>
+          ${codeFrame('main.c', highlightC(l.code))}
+          <h3 style="margin-top:1.1rem">تفسير الكود سطراً بسطر:</h3>
+          <ul class="line-explain-list">
+            ${l.lineByLine.map(([cd, ex], n) => `<li class="line-explain-item"><span class="step-num-badge">${n + 1}</span><span class="line-code-chip">${escapeHtml(cd)}</span><span>${escapeHtml(ex)}</span></li>`).join('')}
+          </ul>`;
+      } else if (curTab === 2) {
+        body = `
+          <div class="grid-2">
+            <div>${codeFrame('Algorithme (Pseudocode)', escapeHtml(l.algo))}</div>
+            <div>${codeFrame('Langage C (main.c)', highlightC(l.code))}</div>
+          </div>
+          <div class="callout callout-info" style="margin-top:0.85rem">
+            هل تريد فهم كل كلمة ومقابلها بين C والخوارزميات؟ <a href="keywords.html" style="color:var(--primary);font-weight:700;text-decoration:underline">افتح قاموس 50 أمراً في C ↔ Algo</a>.
+          </div>`;
+      } else if (curTab === 3) {
+        body = l.mistakes.map(m => `
+          <div class="mistake-grid">
+            <div class="callout callout-warn" style="margin:0">
+              <strong style="color:var(--rose)">الخطأ الشائع (تجنبه):</strong>
+              <pre class="code-block">${escapeHtml(m.bad)}</pre>
+            </div>
+            <div class="callout callout-ok" style="margin:0">
+              <strong style="color:var(--sage)">الكتابة الصحيحة:</strong>
+              <pre class="code-block">${escapeHtml(m.good)}</pre>
+            </div>
+          </div>
+          <p class="muted prose" style="margin-bottom:1.1rem;font-size:0.9rem"><strong>السبب:</strong> ${escapeHtml(m.why)}</p>`).join('');
+      } else {
+        body = `
+          <div class="callout callout-info prose">
+            <strong>التمرين التطبيقي:</strong>
+            <p style="margin-top:0.35rem;font-size:1rem">${escapeHtml(l.practice.prompt)}</p>
+          </div>
+          <details class="callout" style="margin-top:0.8rem">
+            <summary><strong>إظهار تلميح ذكي قبل رؤية الحل</strong></summary>
+            <p style="margin-top:0.45rem">${escapeHtml(l.practice.hint)}</p>
+          </details>
+          <details class="callout callout-ok" style="margin-top:0.8rem">
+            <summary><strong>إظهار الحل النموذجي الكامل بلغة C</strong></summary>
+            ${codeFrame('solution.c', highlightC(l.practice.solution))}
+          </details>`;
+      }
+
+      const viewer = document.getElementById('lessonViewer');
+      viewer.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;padding-bottom:1rem;border-bottom:1px solid var(--border);margin-bottom:1rem">
+          <div>
+            <span class="badge">الدرس ${idx + 1} من ${LESSONS_DATA.length} • المستوى ${l.level}</span>
+            <h2 style="margin:0.45rem 0 0.2rem">${l.title}</h2>
+            <p class="muted" style="font-size:0.88rem">${l.fr}</p>
+          </div>
+          <button type="button" id="markDoneBtn" class="btn ${done ? 'btn-soft' : 'btn-sage'} btn-sm">${done ? 'درس مكتمل ✓' : 'إتمام الدرس (+50 XP)'}</button>
+        </div>
+        <div class="pill-group" style="margin-bottom:1.2rem">
+          ${tabs.map((t, i) => `<button type="button" class="pill ${i === curTab ? 'active' : ''}" data-tab="${i}">${t}</button>`).join('')}
+        </div>
+        <div>${body}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)">
+          <button type="button" id="prevTabBtn" class="btn btn-soft btn-sm" ${curTab === 0 ? 'disabled style="opacity:0.45"' : ''}>القسم السابق</button>
+          <span class="muted" style="font-size:0.84rem">${curTab + 1} / ${tabs.length}</span>
+          <button type="button" id="nextTabBtn" class="btn btn-primary btn-sm">${curTab < tabs.length - 1 ? 'القسم التالي' : 'الدرس التالي ←'}</button>
+        </div>`;
+
+      viewer.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => { curTab = Number(b.dataset.tab); renderLessons(); }));
+      document.getElementById('prevTabBtn').addEventListener('click', () => { if (curTab > 0) { curTab--; renderLessons(); } });
+      document.getElementById('nextTabBtn').addEventListener('click', () => {
+        if (curTab < tabs.length - 1) { curTab++; renderLessons(); }
+        else if (idx < LESSONS_DATA.length - 1) { curLessonId = LESSONS_DATA[idx + 1].id; curTab = 0; renderLessons(); }
+      });
+      document.getElementById('markDoneBtn').addEventListener('click', () => {
+        if (window.appState.completedLessons.includes(l.id)) {
+          window.appState.completedLessons = window.appState.completedLessons.filter(x => x !== l.id);
+          saveAppState(window.appState);
+        } else {
+          window.appState.completedLessons.push(l.id);
+          addXp(50, 'إتمام درس');
+        }
+        renderLessons();
+      });
+      const cp = document.getElementById('copyLBtn');
+      if (cp) cp.addEventListener('click', () => copyCodeText(l.code));
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('#lvlFilters .pill').forEach(p => p.addEventListener('click', () => { curLvl = p.dataset.lvl; renderLessons(); }));
+      renderLessons();
+    });
+  </script>
+</body>
+</html>

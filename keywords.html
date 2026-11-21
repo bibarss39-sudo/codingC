@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>قاموس أوامر C والخوارزميات | Algorithmes &amp; C</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header id="siteHeader"></header>
+  <main class="container">
+    <div class="toolbar">
+      <div>
+        <span class="badge badge-sage">50 أمراً وأكثر من 100 مثال كود • قاموس C ↔ Algorithme</span>
+        <h1 style="font-size:1.6rem;margin:0.35rem 0 0.25rem">قاموس أوامر وكلمات لغة C وتحويلها للخوارزميات</h1>
+        <p class="muted prose">كل أمر وكلمة في لغة C مع شرح مبسّط، الصيغة العامة، مثال أساسي مع تحويله للخوارزمية، ومثال تطبيقي متقدم جاهز للنسخ.</p>
+      </div>
+      <button id="toggleTableBtn" type="button" class="btn btn-soft btn-sm">عرض جدول التحويل السريع</button>
+    </div>
+
+    <div class="toolbar">
+      <input id="kwSearch" class="input" style="flex:1;min-width:220px" type="text" placeholder="ابحث عن أي أمر في C أو الخوارزمية (مثلاً: scanf, Lire, malloc, strcmp, for, struct)..." />
+      <div class="pill-group" id="kwCats">
+        <button type="button" class="pill active" data-kcat="all">الكل (50)</button>
+        <button type="button" class="pill" data-kcat="io">الإدخال والإخراج</button>
+        <button type="button" class="pill" data-kcat="types">أنواع البيانات</button>
+        <button type="button" class="pill" data-kcat="ops">المعاملات</button>
+        <button type="button" class="pill" data-kcat="cond">الشروط</button>
+        <button type="button" class="pill" data-kcat="loops">الحلقات</button>
+        <button type="button" class="pill" data-kcat="funcs">الدوال</button>
+        <button type="button" class="pill" data-kcat="pointers">المؤشرات والذاكرة</button>
+        <button type="button" class="pill" data-kcat="structs">الهياكل والملفات</button>
+        <button type="button" class="pill" data-kcat="strings">النصوص</button>
+        <button type="button" class="pill" data-kcat="pre">الرياضيات و #</button>
+      </div>
+    </div>
+
+    <div id="kwTableWrap" class="card" style="display:none;margin-bottom:1.25rem;overflow-x:auto">
+      <h3 style="margin-bottom:0.75rem">جدول التحويل السريع: لغة C ↔ الخوارزميات (Algorithme)</h3>
+      <table class="clean-table">
+        <thead>
+          <tr><th>الأمر في C</th><th>المقابل في الخوارزمية</th><th>الوظيفة باختصار</th><th>الصيغة العامة</th></tr>
+        </thead>
+        <tbody id="kwTableBody"></tbody>
+      </table>
+    </div>
+
+    <div id="kwGrid" class="grid-2"></div>
+  </main>
+  <footer id="siteFooter"></footer>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/keywords-data.js"></script>
+  <script>
+    renderSharedChrome('keywords.html');
+
+    let kwCat = 'all';
+    let showTable = false;
+
+    function renderKeywords() {
+      const q = (document.getElementById('kwSearch').value || '').trim().toLowerCase();
+      const list = KEYWORDS_DATA.filter(item => {
+        if (kwCat !== 'all' && item.cat !== kwCat) return false;
+        if (!q) return true;
+        return (item.cmd + ' ' + item.algo + ' ' + item.short + ' ' + item.syntax + ' ' + item.cEx + ' ' + (item.cEx2 || '')).toLowerCase().includes(q);
+      });
+
+      const tbl = document.getElementById('kwTableWrap');
+      const grid = document.getElementById('kwGrid');
+      tbl.style.display = showTable ? 'block' : 'none';
+      grid.style.display = showTable ? 'none' : 'grid';
+
+      if (showTable) {
+        document.getElementById('kwTableBody').innerHTML = list.map(it => `
+          <tr>
+            <td><code dir="ltr">${escapeHtml(it.cmd)}</code></td>
+            <td><span class="kw-algo-tag" style="font-size:0.82rem">${escapeHtml(it.algo)}</span></td>
+            <td>${escapeHtml(it.short)}</td>
+            <td><code dir="ltr">${escapeHtml(it.syntax)}</code></td>
+          </tr>`).join('');
+        return;
+      }
+
+      if (!list.length) {
+        grid.innerHTML = `<div class="card" style="grid-column:1/-1;text-align:center">لم يتم العثور على أمر مطابق لبحثك.</div>`;
+        return;
+      }
+
+      grid.innerHTML = list.map((it, idx) => `
+        <article class="card card-hover" style="display:flex;flex-direction:column;gap:0.65rem" data-card-idx="${idx}">
+          <div class="kw-header">
+            <span class="kw-c-tag">${escapeHtml(it.cmd)}</span>
+            <span class="kw-algo-tag">Algo: ${escapeHtml(it.algo)}</span>
+          </div>
+          <p style="font-size:0.95rem"><strong>الشرح المبسّط:</strong> ${escapeHtml(it.short)}</p>
+          <div style="font-size:0.86rem">
+            <strong>كيفية الاستعمال:</strong> <code dir="ltr">${escapeHtml(it.syntax)}</code>
+          </div>
+
+          <div class="kw-card-title-row">
+            <div class="ex-tabs">
+              <button type="button" class="ex-tab-btn active" data-extab="basic">مثال أساسي + الخوارزمية</button>
+              <button type="button" class="ex-tab-btn" data-extab="adv">مثال تطبيقي متقدم</button>
+            </div>
+            <button type="button" class="btn btn-soft btn-sm" data-kwcp="${idx}">نسخ الكود</button>
+          </div>
+
+          <div class="ex-panel-basic">
+            <div class="grid-2" style="gap:0.6rem">
+              <div>
+                <div style="font-size:0.78rem;font-weight:700;color:var(--primary)">كود لغة C</div>
+                <pre class="code-block" style="margin:0.3rem 0">${highlightC(it.cEx)}</pre>
+              </div>
+              <div>
+                <div style="font-size:0.78rem;font-weight:700;color:var(--sand)">المقابل في الخوارزمية</div>
+                <pre class="code-block" style="margin:0.3rem 0">${escapeHtml(it.algoEx)}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="ex-panel-adv" style="display:none">
+            <div style="font-size:0.78rem;font-weight:700;color:var(--sage)">تطبيق عملي إضافي بلغة C</div>
+            <pre class="code-block" style="margin:0.3rem 0">${highlightC(it.cEx2 || it.cEx)}</pre>
+          </div>
+
+          <div class="callout callout-info" style="margin:auto 0 0;font-size:0.86rem">
+            <strong>انتبه:</strong> ${escapeHtml(it.tip)}
+          </div>
+        </article>`).join('');
+
+      grid.querySelectorAll('article[data-card-idx]').forEach(card => {
+        const idx = Number(card.dataset.cardIdx);
+        const item = list[idx];
+        let activeMode = 'basic';
+        card.querySelectorAll('.ex-tab-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            activeMode = btn.dataset.extab;
+            card.querySelectorAll('.ex-tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+            card.querySelector('.ex-panel-basic').style.display = activeMode === 'basic' ? 'block' : 'none';
+            card.querySelector('.ex-panel-adv').style.display = activeMode === 'adv' ? 'block' : 'none';
+          });
+        });
+        card.querySelector('[data-kwcp]').addEventListener('click', () => {
+          copyCodeText(activeMode === 'adv' ? (item.cEx2 || item.cEx) : item.cEx);
+        });
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('kwSearch').addEventListener('input', renderKeywords);
+      document.querySelectorAll('#kwCats .pill').forEach(p => p.addEventListener('click', () => {
+        kwCat = p.dataset.kcat;
+        document.querySelectorAll('#kwCats .pill').forEach(x => x.classList.toggle('active', x === p));
+        renderKeywords();
+      }));
+      document.getElementById('toggleTableBtn').addEventListener('click', (e) => {
+        showTable = !showTable;
+        e.target.textContent = showTable ? 'عرض البطاقات التفصيلية' : 'عرض جدول التحويل السريع';
+        renderKeywords();
+      });
+      renderKeywords();
+    });
+  </script>
+</body>
+</html>

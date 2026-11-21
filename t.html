@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>التمارين والمختبر ومحاكي الذاكرة | Algorithmes &amp; C</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header id="siteHeader"></header>
+  <main class="container">
+    <div class="toolbar">
+      <div>
+        <span class="badge badge-sand">تطبيق عملي تفاعلي</span>
+        <h1 style="font-size:1.55rem;margin:0.3rem 0 0.2rem">التمارين، محاكي الذاكرة ومختبر فحص الأخطاء</h1>
+        <p class="muted">اختبر فهمك، تتبّع المؤشرات والمكدس داخل RAM، وافحص أكواد C لاكتشاف الأخطاء الشائعة فوراً.</p>
+      </div>
+      <div class="pill-group">
+        <button type="button" class="pill active" data-tpanel="quiz">1. اختبارات تفاعلية</button>
+        <button type="button" class="pill" data-tpanel="vis">2. محاكي الذاكرة RAM</button>
+        <button type="button" class="pill" data-tpanel="lab">3. مختبر فحص كود C</button>
+      </div>
+    </div>
+
+    <section id="panel-quiz" class="card" style="max-width:800px;margin:0 auto"></section>
+
+    <section id="panel-vis" style="display:none">
+      <div class="pill-group" id="visScenarioBar" style="margin-bottom:1rem">
+        <button type="button" class="pill active" data-vsc="ptr">1. المؤشرات (&amp; و *)</button>
+        <button type="button" class="pill" data-vsc="swap">2. التبديل بالمؤشرات (Swap)</button>
+        <button type="button" class="pill" data-vsc="rec">3. الاستدعاء الذاتي (Call Stack)</button>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem">
+            <h3 id="vTitle">تتبع المؤشرات في RAM</h3>
+            <span id="vStepLbl" class="badge">خطوة 1 / 4</span>
+          </div>
+          <div id="vCode" class="code-block" style="font-family:'JetBrains Mono',monospace"></div>
+          <div class="btn-row">
+            <button type="button" id="vPrev" class="btn btn-soft btn-sm">السابق</button>
+            <button type="button" id="vAuto" class="btn btn-sage btn-sm">تشغيل تلقائي</button>
+            <button type="button" id="vNext" class="btn btn-primary btn-sm">التالي</button>
+            <button type="button" id="vReset" class="btn btn-soft btn-sm">إعادة</button>
+          </div>
+          <div id="vExplain" class="callout callout-info" style="margin-top:0.85rem"></div>
+        </div>
+        <div class="card">
+          <h3>خلايا الذاكرة الحية (RAM Stack)</h3>
+          <div id="vMem" class="grid-2" style="margin-top:0.75rem"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-lab" style="display:none">
+      <div class="grid-2">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.65rem">
+            <h3>محرر كود C (main.c)</h3>
+            <div style="display:flex;gap:0.4rem">
+              <button type="button" id="copyLabBtn" class="btn btn-soft btn-sm">نسخ</button>
+              <button type="button" id="runLabBtn" class="btn btn-primary btn-sm">فحص الأخطاء الآن</button>
+            </div>
+          </div>
+          <textarea id="labCode" rows="13" class="code-editor" spellcheck="false">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+void main() {
+    int age;
+    scanf("%d", age);
+    if (age = 18) {
+        printf("بالغ\n")
+    }
+    int *p = malloc(5 * sizeof(int));
+}</textarea>
+        </div>
+        <div class="card">
+          <h3>تقرير مصحح الأخطاء الذكي</h3>
+          <div id="labDiag" style="margin-top:0.75rem"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer id="siteFooter"></footer>
+  <script src="assets/js/core.js"></script>
+  <script>
+    renderSharedChrome('t.html');
+
+    const QZ = [
+      { q: 'ما ناتج تنفيذ هذا الكود؟', code: 'int a = 7, b = 2;\nprintf("%d", a / b);', opts: ['3.5', '3', '4', 'خطأ ترجمة'], ans: 1, exp: 'قسمة int على int تعطي قسمة صحيحة (3) وتهمل الفاصلة.' },
+      { q: 'أين الخطأ في السطر التالي؟', code: 'int x;\nscanf("%d", x);', opts: ['استخدام %d خطأ', 'نسيان علامة & قبل x', 'نسيان return 0', 'لا يوجد خطأ'], ans: 1, exp: 'تحتاج scanf لعنوان المتغير: scanf("%d", &x);' },
+      { q: 'ما قيمة y بعد التنفيذ؟', code: 'int y = 10;\nint *p = &y;\n*p = *p + 5;', opts: ['10', '15', '5', 'عنوان الذاكرة'], ans: 1, exp: '*p تعدّل قيمة y في نفس الخلية فتصبح 15.' },
+      { q: 'كم مرة تطبع كلمة Hi؟', code: 'int i = 5;\ndo { printf("Hi"); } while (i < 5);', opts: ['0 مرات', 'مرة واحدة', '5 مرات', 'حلقة لا نهائية'], ans: 1, exp: 'do-while تنفذ الجسم مرة واحدة على الأقل قبل فحص الشرط.' },
+      { q: 'كيف نصل لحقل age من مؤشر ptr لهيكل struct؟', code: 'Student *ptr = &s;', opts: ['ptr.age', 'ptr->age', '*ptr.age', '&ptr.age'], ans: 1, exp: 'مع مؤشر الهيكل نستخدم السهم (->).' },
+      { q: 'ما ناتج نسيان free() بعد malloc()؟', code: 'int *p = malloc(100);', opts: ['Syntax Error', 'Memory Leak (تسرب ذاكرة)', 'Stack Overflow', 'لا شيء'], ans: 1, exp: 'تبقى الذاكرة محجوزة في Heap دون تحرير (Memory Leak).' }
+    ];
+    let qIdx = 0;
+
+    function renderQuiz() {
+      const q = QZ[qIdx % QZ.length];
+      const el = document.getElementById('panel-quiz');
+      el.innerHTML = `
+        <div style="display:flex;justify-content:space-between;margin-bottom:0.65rem">
+          <span class="badge">سؤال ${(qIdx % QZ.length) + 1} من ${QZ.length}</span>
+          <span class="muted">النقاط: ${window.appState.quizStats.correct} / ${window.appState.quizStats.answered}</span>
+        </div>
+        <h3>${q.q}</h3>
+        <pre class="code-block">${highlightC(q.code)}</pre>
+        <div class="grid-2" style="margin-top:0.75rem">${q.opts.map((o, i) => `<button type="button" class="btn btn-soft qopt" data-i="${i}">${o}</button>`).join('')}</div>
+        <div id="qFb" style="margin-top:0.85rem"></div>
+        <div class="btn-row"><button type="button" id="qNext" class="btn btn-primary btn-sm" style="display:none">السؤال التالي ←</button></div>`;
+      let done = false;
+      el.querySelectorAll('.qopt').forEach(b => b.addEventListener('click', () => {
+        if (done) return; done = true;
+        const ok = Number(b.dataset.i) === q.ans;
+        window.appState.quizStats.answered++;
+        if (ok) { window.appState.quizStats.correct++; addXp(25, 'إجابة صحيحة'); } else saveAppState(window.appState);
+        document.getElementById('qFb').innerHTML = `<div class="callout ${ok ? 'callout-ok' : 'callout-warn'}"><strong>${ok ? 'إجابة صحيحة!' : 'إجابة غير صحيحة:'}</strong> ${q.exp}</div>`;
+        document.getElementById('qNext').style.display = 'inline-flex';
+      }));
+      document.getElementById('qNext').addEventListener('click', () => { qIdx++; renderQuiz(); });
+    }
+
+    const VIS_DATA = {
+      ptr: {
+        title: 'تتبع المؤشرات في RAM (& و *)',
+        lines: ['int x = 10;', 'int *p = &x;', '*p = 42;', 'printf("x = %d\\n", x);'],
+        steps: [
+          { line: 0, exp: 'حجز المتغير x في الذاكرة عند 0x7ffd10 بقيمة 10.', mem: [{ n: 'x', a: '0x7ffd10', v: '10', c: true }] },
+          { line: 1, exp: 'إنشاء المؤشر p وتخزين عنوان x (أي 0x7ffd10) بداخله.', mem: [{ n: 'x', a: '0x7ffd10', v: '10' }, { n: 'p', a: '0x7ffd14', v: '-> 0x7ffd10', c: true }] },
+          { line: 2, exp: 'التعديل عبر *p يغيّر قيمة x في العنوان 0x7ffd10 إلى 42 مباشرة!', mem: [{ n: 'x', a: '0x7ffd10', v: '42', c: true }, { n: 'p', a: '0x7ffd14', v: '-> 0x7ffd10' }] },
+          { line: 3, exp: 'تُطبع القيمة الجديدة على الشاشة: x = 42.', mem: [{ n: 'x', a: '0x7ffd10', v: '42' }, { n: 'p', a: '0x7ffd14', v: '-> 0x7ffd10' }] }
+        ]
+      },
+      swap: {
+        title: 'التبديل بالمؤشرات بين main و swap',
+        lines: ['int x = 5, y = 9;', 'swap(&x, &y);', 'int tmp = *a;', '*a = *b; *b = tmp;'],
+        steps: [
+          { line: 0, exp: 'حجز x=5 و y=9 في إطار main.', mem: [{ n: 'main::x', a: '0x100', v: '5', c: true }, { n: 'main::y', a: '0x104', v: '9', c: true }] },
+          { line: 1, exp: 'تمرير عنواني x و y إلى المؤشرين a و b داخل swap.', mem: [{ n: 'main::x', a: '0x100', v: '5' }, { n: 'main::y', a: '0x104', v: '9' }, { n: 'swap::a', a: '0x200', v: '-> 0x100', c: true }, { n: 'swap::b', a: '0x208', v: '-> 0x104', c: true }] },
+          { line: 2, exp: 'حفظ قيمة *a (أي 5) في المتغير المؤقت tmp.', mem: [{ n: 'main::x', a: '0x100', v: '5' }, { n: 'main::y', a: '0x104', v: '9' }, { n: 'swap::tmp', a: '0x210', v: '5', c: true }] },
+          { line: 3, exp: 'تم التبديل في الذاكرة الأصلية: أصبح x = 9 و y = 5!', mem: [{ n: 'main::x', a: '0x100', v: '9', c: true }, { n: 'main::y', a: '0x104', v: '5', c: true }] }
+        ]
+      },
+      rec: {
+        title: 'تتبع المكدس (Call Stack) في factorielle(3)',
+        lines: ['fact(3) -> 3 * fact(2)', 'fact(2) -> 2 * fact(1)', 'fact(1) -> return 1 (Base Case)', 'fact(3) -> 3 * 2 = 6'],
+        steps: [
+          { line: 0, exp: 'دفع إطار fact(3) في المكدس بانتظار نتيجة fact(2).', mem: [{ n: 'Frame 1: fact(3)', a: 'SP+0', v: '3 * ?', c: true }] },
+          { line: 1, exp: 'دفع إطار fact(2) فوقه بانتظار نتيجة fact(1).', mem: [{ n: 'Frame 2: fact(2)', a: 'SP+1', v: '2 * ?', c: true }, { n: 'Frame 1: fact(3)', a: 'SP+0', v: '3 * ?' }] },
+          { line: 2, exp: 'الوصول لحالة التوقف: fact(1) ترجع 1 ويبدأ تفريغ المكدس.', mem: [{ n: 'Frame 3: fact(1)', a: 'SP+2', v: 'return 1', c: true }, { n: 'Frame 2: fact(2)', a: 'SP+1', v: '2 * 1 = 2' }] },
+          { line: 3, exp: 'إرجاع النتيجة النهائية 3! = 6 إلى main وتفريغ المكدس بالكامل.', mem: [{ n: 'Result', a: 'main', v: '6', c: true }] }
+        ]
+      }
+    };
+
+    let vSc = 'ptr', vIdx = 0, vTimer = null;
+
+    function stopAuto() {
+      if (vTimer) { clearInterval(vTimer); vTimer = null; }
+      document.getElementById('vAuto').textContent = 'تشغيل تلقائي';
+    }
+
+    function renderVis() {
+      const sc = VIS_DATA[vSc];
+      const s = sc.steps[vIdx];
+      document.getElementById('vTitle').textContent = sc.title;
+      document.getElementById('vStepLbl').textContent = `خطوة ${vIdx + 1} / ${sc.steps.length}`;
+      document.getElementById('vCode').innerHTML = sc.lines.map((l, i) => `<div class="${i === s.line ? 'line-active' : ''}">${i + 1}. ${highlightC(l)}</div>`).join('');
+      document.getElementById('vExplain').textContent = s.exp;
+      document.getElementById('vMem').innerHTML = s.mem.map(m => `<div class="mem-cell ${m.c ? 'changed' : ''}"><div><strong>${m.n}</strong> (${m.a})</div><div style="font-size:1.05rem;margin-top:4px;color:var(--primary)">${m.v}</div></div>`).join('');
+    }
+
+    function runLab() {
+      const issues = analyzeCCode(document.getElementById('labCode').value);
+      const out = document.getElementById('labDiag');
+      if (!issues.length) out.innerHTML = `<div class="callout callout-ok">ممتاز! لم يتم العثور على أخطاء شائعة في الكود.</div>`;
+      else out.innerHTML = issues.map(i => `<div class="callout ${i.sev === 'error' ? 'callout-warn' : ''}"><strong>سطر ${i.line}:</strong> ${escapeHtml(i.msg)}</div>`).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('[data-tpanel]').forEach(b => b.addEventListener('click', () => {
+        stopAuto();
+        document.querySelectorAll('[data-tpanel]').forEach(x => x.classList.toggle('active', x === b));
+        ['quiz', 'vis', 'lab'].forEach(id => document.getElementById(`panel-${id}`).style.display = b.dataset.tpanel === id ? 'block' : 'none');
+      }));
+      document.querySelectorAll('[data-vsc]').forEach(b => b.addEventListener('click', () => {
+        stopAuto(); vSc = b.dataset.vsc; vIdx = 0;
+        document.querySelectorAll('[data-vsc]').forEach(x => x.classList.toggle('active', x === b));
+        renderVis();
+      }));
+      document.getElementById('vPrev').addEventListener('click', () => { stopAuto(); if (vIdx > 0) { vIdx--; renderVis(); } });
+      document.getElementById('vNext').addEventListener('click', () => { stopAuto(); if (vIdx < VIS_DATA[vSc].steps.length - 1) { vIdx++; renderVis(); } });
+      document.getElementById('vReset').addEventListener('click', () => { stopAuto(); vIdx = 0; renderVis(); });
+      document.getElementById('vAuto').addEventListener('click', () => {
+        if (vTimer) { stopAuto(); return; }
+        document.getElementById('vAuto').textContent = 'إيقاف مؤقت';
+        vTimer = setInterval(() => {
+          if (vIdx < VIS_DATA[vSc].steps.length - 1) { vIdx++; renderVis(); } else stopAuto();
+        }, 1500);
+      });
+      document.getElementById('runLabBtn').addEventListener('click', runLab);
+      document.getElementById('copyLabBtn').addEventListener('click', () => copyCodeText(document.getElementById('labCode').value));
+      renderQuiz(); renderVis(); runLab();
+      if (location.hash === '#visualizer') document.querySelector('[data-tpanel="vis"]').click();
+      if (location.hash === '#lab') document.querySelector('[data-tpanel="lab"]').click();
+    });
+  </script>
+</body>
+</html>

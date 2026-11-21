@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مكتبة الأمثلة | Algorithmes &amp; C</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  
+</head>
+<body>
+  <header id="siteHeader"></header>
+  <main class="container">
+    
+<div class="toolbar">
+  <div>
+    <h2 style="margin:0">مكتبة الأمثلة والأكواد العملية (26 برنامج C)</h2>
+    <span class="muted">ابحث بالاسم أو الكود، شاهد الخوارزمية والمخرجات، وانسخ الكود بنقرة واحدة.</span>
+  </div>
+  <div class="badge badge-sage">مرات النسخ: <strong id="copyCountBadge">0</strong></div>
+</div>
+
+<div class="toolbar">
+  <input id="exSearch" class="input" style="flex:1;min-width:220px" type="text" placeholder="ابحث في الأمثلة (مثلاً: malloc, tri, palindrome, matrice, linked)..." />
+  <div class="pill-group" id="exCats">
+    <button class="pill active" data-cat="all">الكل (26)</button>
+    <button class="pill" data-cat="basics">الأساسيات</button>
+    <button class="pill" data-cat="loops">الحلقات</button>
+    <button class="pill" data-cat="arrays">المصفوفات</button>
+    <button class="pill" data-cat="strings">النصوص</button>
+    <button class="pill" data-cat="functions">الدوال</button>
+    <button class="pill" data-cat="pointers">المؤشرات</button>
+    <button class="pill" data-cat="structs">الهياكل والملفات</button>
+    <button class="pill" data-cat="ds">هياكل البيانات والفرز</button>
+  </div>
+</div>
+
+<div id="exGrid" class="grid-2"></div>
+
+<div id="exModal" class="modal-backdrop">
+  <div class="modal-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem">
+      <div><span id="mLvl" class="badge"></span> <span id="mBigO" class="badge badge-sage"></span></div>
+      <button id="mClose" class="icon-btn">✕</button>
+    </div>
+    <h2 id="mTitle"></h2>
+    <p id="mDesc" class="muted" style="margin-bottom:1rem"></p>
+    <div class="grid-2" style="margin-bottom:0.75rem">
+      <div><strong style="font-size:0.84rem;color:var(--sand)">الخوارزمية (Algorithme)</strong><pre id="mAlgo" class="code-block"></pre></div>
+      <div><strong style="font-size:0.84rem;color:var(--sage)">المخرجات المتوقعة</strong><pre id="mOut" class="code-block"></pre></div>
+    </div>
+    <strong style="font-size:0.84rem;color:var(--primary)">كود لغة C الكامل</strong>
+    <pre id="mCode" class="code-block"></pre>
+    <div class="btn-row">
+      <button id="mCopy" class="btn btn-primary btn-sm">نسخ الكود</button>
+      <a href="t.html#lab" class="btn btn-soft btn-sm">فحصه في المختبر</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  let activeCat = 'all';
+  let modalEx = null;
+
+  function renderExamples() {
+    const q = (document.getElementById('exSearch').value || '').trim().toLowerCase();
+    const list = EXAMPLES_DATA.filter(e => {
+      if (activeCat !== 'all' && e.cat !== activeCat) return false;
+      if (!q) return true;
+      return (e.title + ' ' + e.desc + ' ' + e.code + ' ' + e.algo).toLowerCase().includes(q);
+    });
+    const grid = document.getElementById('exGrid');
+    if (!list.length) {
+      grid.innerHTML = `<div class="card" style="grid-column:1/-1;text-align:center">لا توجد أمثلة مطابقة لبحثك.</div>`;
+      return;
+    }
+    grid.innerHTML = list.map(e => `
+      <div class="card card-hover" style="display:flex;flex-direction:column;gap:0.5rem">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="badge">${e.lvl}</span>
+          <span class="badge badge-sage" style="font-family:'IBM Plex Mono',monospace">${e.bigO}</span>
+        </div>
+        <h3>${e.title}</h3>
+        <p class="muted" style="font-size:0.86rem">${e.desc}</p>
+        <pre class="code-block" style="max-height:130px;overflow:hidden">${highlightC(e.code.split('\n').slice(0, 6).join('\n'))}</pre>
+        <div class="btn-row" style="margin-top:auto">
+          <button class="btn btn-primary btn-sm" data-view="${e.id}">عرض الكود والخوارزمية</button>
+          <button class="btn btn-soft btn-sm" data-cp="${e.id}">نسخ</button>
+        </div>
+      </div>`).join('');
+
+    grid.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => {
+      modalEx = EXAMPLES_DATA.find(x => x.id === b.dataset.view);
+      if (!modalEx) return;
+      document.getElementById('mLvl').textContent = modalEx.lvl;
+      document.getElementById('mBigO').textContent = `التعقيد: ${modalEx.bigO}`;
+      document.getElementById('mTitle').textContent = modalEx.title;
+      document.getElementById('mDesc').textContent = modalEx.desc;
+      document.getElementById('mAlgo').textContent = modalEx.algo;
+      document.getElementById('mOut').textContent = modalEx.out;
+      document.getElementById('mCode').innerHTML = highlightC(modalEx.code);
+      document.getElementById('exModal').classList.add('open');
+    }));
+    grid.querySelectorAll('[data-cp]').forEach(b => b.addEventListener('click', () => {
+      const ex = EXAMPLES_DATA.find(x => x.id === b.dataset.cp);
+      if (ex) copyCodeText(ex.code);
+    }));
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('copyCountBadge').textContent = window.appState.copyCount;
+    document.getElementById('exSearch').addEventListener('input', renderExamples);
+    document.querySelectorAll('#exCats .pill').forEach(p => p.addEventListener('click', () => {
+      activeCat = p.dataset.cat;
+      document.querySelectorAll('#exCats .pill').forEach(x => x.classList.toggle('active', x === p));
+      renderExamples();
+    }));
+    document.getElementById('mClose').addEventListener('click', () => document.getElementById('exModal').classList.remove('open'));
+    document.getElementById('exModal').addEventListener('click', (e) => { if (e.target.id === 'exModal') e.target.classList.remove('open'); });
+    document.getElementById('mCopy').addEventListener('click', () => { if (modalEx) copyCodeText(modalEx.code); });
+    renderExamples();
+  });
+</script>
+
+  </main>
+  <footer id="siteFooter"></footer>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/examples-data.js"></script>
+  <script>
+    renderSharedChrome('amtla.html');
+  </script>
+</body>
+</html>
