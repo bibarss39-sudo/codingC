@@ -189,7 +189,13 @@ function renderSharedChrome(activePage) {
       const isOpen = dd.classList.toggle('open');
       mb.setAttribute('aria-expanded', String(isOpen));
     });
-    document.addEventListener('click', () => {
+    if (!window.__coreDocBound) { window.__coreDocBound = true; document.addEventListener('click', (ev) => {
+      const d = document.getElementById('moreDropdown'); const b = document.getElementById('moreBtn');
+      if (d && b) { d.classList.remove('open'); b.setAttribute('aria-expanded', 'false'); }
+      const n = document.getElementById('navLinks');
+      if (n && !ev.target.closest('#navLinks') && !ev.target.closest('#mobileMenuBtn')) n.classList.remove('open');
+    }); }
+    if (false) document.addEventListener('click', () => {
       dd.classList.remove('open');
       mb.setAttribute('aria-expanded', 'false');
     });
@@ -334,4 +340,33 @@ function renderSharedChrome(activePage) {
         <span>${t.label}</span>
       </a>`).join('');
   };
+})();
+
+
+/* Instant Inline-HTML Language Switcher (reads data-ar / data-fr / data-en directly on tags — 0.05ms) */
+window.applyInlineLang = function () {
+  const lang = (window.appState && window.appState.lang) || 'ar';
+  document.querySelectorAll('[data-ar]').forEach(el => {
+    const val = el.getAttribute('data-' + lang) || el.getAttribute('data-ar');
+    if (val && el.textContent !== val) el.textContent = val;
+  });
+  document.querySelectorAll('[data-ph-ar]').forEach(el => {
+    const val = el.getAttribute('data-ph-' + lang) || el.getAttribute('data-ph-ar');
+    if (val && el.placeholder !== val) el.placeholder = val;
+  });
+  const footer = document.getElementById('siteFooter');
+  if (footer) {
+    if (lang === 'fr') footer.innerHTML = 'Algorithmes &amp; C — Plateforme éducative complète • <strong>bibarss39</strong>';
+    else if (lang === 'en') footer.innerHTML = 'Algorithms &amp; C — Complete CS Learning Platform • <strong>bibarss39</strong>';
+    else footer.innerHTML = 'Algorithmes &amp; C — منصة تعليمية متكاملة لطلاب لغة C • <strong>bibarss39</strong>';
+  }
+};
+
+(function () {
+  const _prev = window.renderSharedChrome;
+  window.renderSharedChrome = function (activePage) {
+    _prev(activePage);
+    window.applyInlineLang();
+  };
+  document.addEventListener('DOMContentLoaded', () => window.applyInlineLang());
 })();

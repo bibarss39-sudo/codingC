@@ -8,21 +8,21 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./style.css?v=7" />
+  <link rel="stylesheet" href="./style.css?v=8" />
 </head>
 <body>
   <header id="siteHeader"></header>
   <main class="container">
     <div class="toolbar">
       <div>
-        <span class="badge badge-sand">تطبيق عملي تفاعلي</span>
-        <h1 style="font-size:1.55rem;margin:0.3rem 0 0.2rem">التمارين، محاكي الذاكرة ومختبر فحص الأخطاء</h1>
-        <p class="muted">اختبر فهمك، تتبّع المؤشرات والمكدس داخل RAM، وافحص أكواد C لاكتشاف الأخطاء الشائعة فوراً.</p>
+        <span class="badge badge-sand" data-ar="تطبيق عملي تفاعلي" data-fr="Pratique Interactive" data-en="Interactive Practice">تطبيق عملي تفاعلي</span>
+        <h1 style="font-size:1.55rem;margin:0.3rem 0 0.2rem" data-ar="التمارين، محاكي الذاكرة ومختبر فحص الأخطاء" data-fr="Quiz, Visualiseur RAM &amp; Analyseur d'Erreurs" data-en="Quizzes, RAM Visualizer &amp; Bug Lab">التمارين، محاكي الذاكرة ومختبر فحص الأخطاء</h1>
+        <p class="muted" data-ar="اختبر فهمك، تتبّع المؤشرات والمكدس داخل RAM، وافحص أكواد C لاكتشاف الأخطاء الشائعة فوراً." data-fr="Testez vos connaissances, visualisez la RAM pas à pas et détectez les bugs C instantanément." data-en="Test your understanding, trace pointers &amp; call stack in RAM, and detect C bugs instantly.">اختبر فهمك، تتبّع المؤشرات والمكدس داخل RAM، وافحص أكواد C لاكتشاف الأخطاء الشائعة فوراً.</p>
       </div>
       <div class="pill-group">
-        <button type="button" class="pill active" data-tpanel="quiz">1. اختبارات تفاعلية</button>
-        <button type="button" class="pill" data-tpanel="vis">2. محاكي الذاكرة RAM</button>
-        <button type="button" class="pill" data-tpanel="lab">3. مختبر فحص كود C</button>
+        <button type="button" class="pill active" data-tpanel="quiz" data-ar="1. اختبارات تفاعلية" data-fr="1. Quiz Interactifs" data-en="1. Interactive Quizzes">1. اختبارات تفاعلية</button>
+        <button type="button" class="pill" data-tpanel="vis" data-ar="2. محاكي الذاكرة RAM" data-fr="2. Visualiseur RAM" data-en="2. RAM Visualizer">2. محاكي الذاكرة RAM</button>
+        <button type="button" class="pill" data-tpanel="lab" data-ar="3. مختبر فحص كود C" data-fr="3. Analyseur de Code C" data-en="3. C Bug Analyzer">3. مختبر فحص كود C</button>
       </div>
     </div>
 
@@ -31,8 +31,8 @@
     <section id="panel-vis" style="display:none">
       <div class="pill-group" id="visScenarioBar" style="margin-bottom:1rem">
         <button type="button" class="pill active" data-vsc="ptr">1. المؤشرات (&amp; و *)</button>
-        <button type="button" class="pill" data-vsc="swap">2. التبديل بالمؤشرات (Swap)</button>
-        <button type="button" class="pill" data-vsc="rec">3. الاستدعاء الذاتي (Call Stack)</button>
+        <button type="button" class="pill" data-vsc="swap" data-ar="2. التبديل بالمؤشرات (Swap)" data-fr="2. Échange (Swap)" data-en="2. Swap with Pointers">2. التبديل بالمؤشرات (Swap)</button>
+        <button type="button" class="pill" data-vsc="rec" data-ar="3. الاستدعاء الذاتي (Call Stack)" data-fr="3. Récursivité (Pile)" data-en="3. Recursion (Call Stack)">3. الاستدعاء الذاتي (Call Stack)</button>
       </div>
       <div class="grid-2">
         <div class="card">
@@ -42,15 +42,15 @@
           </div>
           <div id="vCode" class="code-block" style="font-family:'JetBrains Mono',monospace"></div>
           <div class="btn-row">
-            <button type="button" id="vPrev" class="btn btn-soft btn-sm">السابق</button>
-            <button type="button" id="vAuto" class="btn btn-sage btn-sm">تشغيل تلقائي</button>
-            <button type="button" id="vNext" class="btn btn-primary btn-sm">التالي</button>
-            <button type="button" id="vReset" class="btn btn-soft btn-sm">إعادة</button>
+            <button type="button" id="vPrev" class="btn btn-soft btn-sm" data-ar="السابق" data-fr="Précédent" data-en="Prev">السابق</button>
+            <button type="button" id="vAuto" class="btn btn-sage btn-sm" data-ar="تشغيل تلقائي" data-fr="Lecture auto" data-en="Auto Play">تشغيل تلقائي</button>
+            <button type="button" id="vNext" class="btn btn-primary btn-sm" data-ar="التالي" data-fr="Suivant" data-en="Next">التالي</button>
+            <button type="button" id="vReset" class="btn btn-soft btn-sm" data-ar="إعادة" data-fr="Réinitialiser" data-en="Reset">إعادة</button>
           </div>
           <div id="vExplain" class="callout callout-info" style="margin-top:0.85rem"></div>
         </div>
         <div class="card">
-          <h3>خلايا الذاكرة الحية (RAM Stack)</h3>
+          <h3 data-ar="خلايا الذاكرة الحية (RAM Stack)" data-fr="Cellules Mémoire (RAM Stack)" data-en="Live RAM Memory Cells">خلايا الذاكرة الحية (RAM Stack)</h3>
           <div id="vMem" class="grid-2" style="margin-top:0.75rem"></div>
         </div>
       </div>
@@ -60,10 +60,10 @@
       <div class="grid-2">
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.65rem">
-            <h3>محرر كود C (main.c)</h3>
+            <h3 data-ar="محرر كود C (main.c)" data-fr="Éditeur C (main.c)" data-en="C Code Editor (main.c)">محرر كود C (main.c)</h3>
             <div style="display:flex;gap:0.4rem">
-              <button type="button" id="copyLabBtn" class="btn btn-soft btn-sm">نسخ</button>
-              <button type="button" id="runLabBtn" class="btn btn-primary btn-sm">فحص الأخطاء الآن</button>
+              <button type="button" id="copyLabBtn" class="btn btn-soft btn-sm" data-ar="نسخ" data-fr="Copier" data-en="Copy">نسخ</button>
+              <button type="button" id="runLabBtn" class="btn btn-primary btn-sm" data-ar="فحص الأخطاء الآن" data-fr="Analyser le code" data-en="Analyze Bugs Now">فحص الأخطاء الآن</button>
             </div>
           </div>
           <textarea id="labCode" rows="13" class="code-editor" spellcheck="false">#include &lt;stdio.h&gt;
@@ -79,15 +79,14 @@ void main() {
 }</textarea>
         </div>
         <div class="card">
-          <h3>تقرير مصحح الأخطاء الذكي</h3>
+          <h3 data-ar="تقرير مصحح الأخطاء الذكي" data-fr="Rapport d'analyse statique" data-en="Static Bug Analysis Report">تقرير مصحح الأخطاء الذكي</h3>
           <div id="labDiag" style="margin-top:0.75rem"></div>
         </div>
       </div>
     </section>
   </main>
   <footer id="siteFooter"></footer>
-  <script src="./core.js?v=7"></script>
-  <script src="./lang-pack.js?v=7"></script>
+  <script src="./core.js?v=8"></script>
   <script>
     renderSharedChrome('t.html');
 

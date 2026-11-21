@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./style.css?v=7" />
+  <link rel="stylesheet" href="./style.css?v=8" />
   
 </head>
 <body>
@@ -17,24 +17,24 @@
     
 <div class="toolbar">
   <div>
-    <h2 style="margin:0">مكتبة الأمثلة والأكواد العملية (26 برنامج C)</h2>
-    <span class="muted">ابحث بالاسم أو الكود، شاهد الخوارزمية والمخرجات، وانسخ الكود بنقرة واحدة.</span>
+    <h2 style="margin:0" data-ar="مكتبة الأمثلة والأكواد العملية (26 برنامج C)" data-fr="Bibliothèque d'Exemples Pratiques (26 Programmes C)" data-en="Practical C Code Examples Library (26 Programs)">مكتبة الأمثلة والأكواد العملية (26 برنامج C)</h2>
+    <span class="muted" data-ar="ابحث بالاسم أو الكود، شاهد الخوارزمية والمخرجات، وانسخ الكود بنقرة واحدة." data-fr="Recherchez par nom ou code, consultez l'algorithme et le résultat, puis copiez en un clic." data-en="Search by name or code, inspect the algorithm and output, and copy with one click.">ابحث بالاسم أو الكود، شاهد الخوارزمية والمخرجات، وانسخ الكود بنقرة واحدة.</span>
   </div>
   <div class="badge badge-sage">مرات النسخ: <strong id="copyCountBadge">0</strong></div>
 </div>
 
 <div class="toolbar">
-  <input id="exSearch" class="input" style="flex:1;min-width:220px" type="text" placeholder="ابحث في الأمثلة (مثلاً: malloc, tri, palindrome, matrice, linked)..." />
+  <input id="exSearch" class="input" style="flex:1;min-width:220px" type="text" placeholder="ابحث في الأمثلة (مثلاً: malloc, tri, palindrome, matrice, linked)..." data-ph-ar="ابحث في الأمثلة (مثلاً: malloc, tri, palindrome, matrice, linked)..." data-ph-fr="Rechercher un exemple (ex: malloc, tri, palindrome, matrice, linked)..." data-ph-en="Search examples (e.g., malloc, sort, palindrome, matrix, linked)..." />
   <div class="pill-group" id="exCats">
-    <button class="pill active" data-cat="all">الكل (26)</button>
-    <button class="pill" data-cat="basics">الأساسيات</button>
-    <button class="pill" data-cat="loops">الحلقات</button>
-    <button class="pill" data-cat="arrays">المصفوفات</button>
-    <button class="pill" data-cat="strings">النصوص</button>
-    <button class="pill" data-cat="functions">الدوال</button>
-    <button class="pill" data-cat="pointers">المؤشرات</button>
-    <button class="pill" data-cat="structs">الهياكل والملفات</button>
-    <button class="pill" data-cat="ds">هياكل البيانات والفرز</button>
+    <button class="pill active" data-cat="all" data-ar="الكل (26)" data-fr="Tous (26)" data-en="All (26)">الكل (26)</button>
+    <button class="pill" data-cat="basics" data-ar="الأساسيات" data-fr="Bases" data-en="Basics">الأساسيات</button>
+    <button class="pill" data-cat="loops" data-ar="الحلقات" data-fr="Boucles" data-en="Loops">الحلقات</button>
+    <button class="pill" data-cat="arrays" data-ar="المصفوفات" data-fr="Tableaux" data-en="Arrays">المصفوفات</button>
+    <button class="pill" data-cat="strings" data-ar="النصوص" data-fr="Chaînes" data-en="Strings">النصوص</button>
+    <button class="pill" data-cat="functions" data-ar="الدوال" data-fr="Fonctions" data-en="Functions">الدوال</button>
+    <button class="pill" data-cat="pointers" data-ar="المؤشرات" data-fr="Pointeurs" data-en="Pointers">المؤشرات</button>
+    <button class="pill" data-cat="structs" data-ar="الهياكل والملفات" data-fr="Structures &amp; Fichiers" data-en="Structs &amp; Files">الهياكل والملفات</button>
+    <button class="pill" data-cat="ds" data-ar="هياكل البيانات والفرز" data-fr="Structures &amp; Tri" data-en="Data Structures &amp; Sort">هياكل البيانات والفرز</button>
   </div>
 </div>
 
@@ -50,13 +50,13 @@
     <p id="mDesc" class="muted" style="margin-bottom:1rem"></p>
     <div class="grid-2" style="margin-bottom:0.75rem">
       <div><strong style="font-size:0.84rem;color:var(--sand)">الخوارزمية (Algorithme)</strong><pre id="mAlgo" class="code-block"></pre></div>
-      <div><strong style="font-size:0.84rem;color:var(--sage)">المخرجات المتوقعة</strong><pre id="mOut" class="code-block"></pre></div>
+      <div><strong style="font-size:0.84rem;color:var(--sage)" data-ar="المخرجات المتوقعة" data-fr="Sortie attendue" data-en="Expected Output">المخرجات المتوقعة</strong><pre id="mOut" class="code-block"></pre></div>
     </div>
-    <strong style="font-size:0.84rem;color:var(--primary)">كود لغة C الكامل</strong>
+    <strong style="font-size:0.84rem;color:var(--primary)" data-ar="كود لغة C الكامل" data-fr="Code C complet" data-en="Full C Code">كود لغة C الكامل</strong>
     <pre id="mCode" class="code-block"></pre>
     <div class="btn-row">
-      <button id="mCopy" class="btn btn-primary btn-sm">نسخ الكود</button>
-      <a href="t.html#lab" class="btn btn-soft btn-sm">فحصه في المختبر</a>
+      <button id="mCopy" class="btn btn-primary btn-sm" data-ar="نسخ الكود" data-fr="Copier le code" data-en="Copy Code">نسخ الكود</button>
+      <a href="t.html#lab" class="btn btn-soft btn-sm" data-ar="فحصه في المختبر" data-fr="Tester dans le Labo" data-en="Check in Lab">فحصه في المختبر</a>
     </div>
   </div>
 </div>
@@ -127,8 +127,7 @@
 
   </main>
   <footer id="siteFooter"></footer>
-  <script src="./core.js?v=7"></script>
-  <script src="./lang-pack.js?v=7"></script>
+  <script src="./core.js?v=8"></script>
   <script src="./examples-data.js"></script>
   <script>
     renderSharedChrome('amtla.html');

@@ -8,20 +8,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./style.css?v=7" />
+  <link rel="stylesheet" href="./style.css?v=8" />
 </head>
 <body>
   <header id="siteHeader"></header>
   <main class="container">
     <div class="toolbar">
       <div style="flex:1;min-width:260px">
-        <span class="badge badge-sage">منهج متكامل • 18 درساً مشروحاً بعمق</span>
-        <h1 style="font-size:1.55rem;margin:0.3rem 0 0.2rem">الدروس التفاعلية المتدرجة في لغة C والخوارزميات</h1>
-        <p class="muted">تشبيه واقعي، قواعد واضحة، شرح الكود سطراً بسطر، التحويل للخوارزمية، أخطاء شائعة، وتمرين محلول.</p>
+        <span class="badge badge-sage" data-ar="منهج متكامل • 18 درساً مشروحاً بعمق" data-fr="Programme complet • 18 cours approfondis" data-en="Complete Curriculum • 18 In-Depth Lessons">منهج متكامل • 18 درساً مشروحاً بعمق</span>
+        <h1 style="font-size:1.55rem;margin:0.3rem 0 0.2rem" data-ar="الدروس التفاعلية المتدرجة في لغة C والخوارزميات" data-fr="Cours Interactifs Progressifs : Langage C &amp; Algorithmique" data-en="Progressive Interactive C &amp; Algorithms Lessons">الدروس التفاعلية المتدرجة في لغة C والخوارزميات</h1>
+        <p class="muted" data-ar="تشبيه واقعي، قواعد واضحة، شرح الكود سطراً بسطر، التحويل للخوارزمية، أخطاء شائعة، وتمرين محلول." data-fr="Analogie concrète, règles claires, code expliqué ligne par ligne, algorithme, erreurs fréquentes et exercice corrigé." data-en="Real-world analogy, clear rules, line-by-line code explanation, algorithm mapping, pitfalls, and solved exercise.">تشبيه واقعي، قواعد واضحة، شرح الكود سطراً بسطر، التحويل للخوارزمية، أخطاء شائعة، وتمرين محلول.</p>
       </div>
       <div style="min-width:220px">
         <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:5px">
-          <strong>تقدمك في المنهج</strong>
+          <strong data-ar="تقدمك في المنهج" data-fr="Votre progression" data-en="Your Progress">تقدمك في المنهج</strong>
           <span id="coursePctText" style="color:var(--primary);font-weight:700">0 / 18 (0%)</span>
         </div>
         <div class="progress-track"><div id="coursePctBar" class="progress-fill" style="width:0%"></div></div>
@@ -30,20 +30,20 @@
 
     <div class="toolbar" style="padding:0.7rem 1rem">
       <div class="pill-group" id="lvlFilters">
-        <button type="button" class="pill active" data-lvl="all">جميع الدروس (18)</button>
-        <button type="button" class="pill" data-lvl="1">المستوى 1: الأساسيات</button>
-        <button type="button" class="pill" data-lvl="2">المستوى 2: الدوال والمصفوفات</button>
-        <button type="button" class="pill" data-lvl="3">المستوى 3: المؤشرات والذاكرة</button>
-        <button type="button" class="pill" data-lvl="4">المستوى 4: الهياكل والبيانات</button>
+        <button type="button" class="pill active" data-lvl="all" data-ar="جميع الدروس (18)" data-fr="Tous les cours (18)" data-en="All Lessons (18)">جميع الدروس (18)</button>
+        <button type="button" class="pill" data-lvl="1" data-ar="المستوى 1: الأساسيات" data-fr="Niveau 1 : Bases" data-en="Level 1: Basics">المستوى 1: الأساسيات</button>
+        <button type="button" class="pill" data-lvl="2" data-ar="المستوى 2: الدوال والمصفوفات" data-fr="Niveau 2 : Fonctions &amp; Tableaux" data-en="Level 2: Functions &amp; Arrays">المستوى 2: الدوال والمصفوفات</button>
+        <button type="button" class="pill" data-lvl="3" data-ar="المستوى 3: المؤشرات والذاكرة" data-fr="Niveau 3 : Pointeurs &amp; Mémoire" data-en="Level 3: Pointers &amp; Memory">المستوى 3: المؤشرات والذاكرة</button>
+        <button type="button" class="pill" data-lvl="4" data-ar="المستوى 4: الهياكل والبيانات" data-fr="Niveau 4 : Structures &amp; Données" data-en="Level 4: Structs &amp; Data">المستوى 4: الهياكل والبيانات</button>
       </div>
     </div>
 
     <div class="mobile-lesson-picker card" style="padding:0.85rem">
-      <label for="mobileLessonSelect">اختر الدرس مباشرة:</label>
+      <label for="mobileLessonSelect" data-ar="اختر الدرس مباشرة:" data-fr="Choisir un cours :" data-en="Select a lesson:">اختر الدرس مباشرة:</label>
       <select id="mobileLessonSelect" class="select"></select>
       <div class="mobile-lesson-controls">
-        <button type="button" id="mobPrevLesson" class="btn btn-soft btn-sm" style="flex:1">→ الدرس السابق</button>
-        <button type="button" id="mobNextLesson" class="btn btn-primary btn-sm" style="flex:1">الدرس التالي ←</button>
+        <button type="button" id="mobPrevLesson" class="btn btn-soft btn-sm" style="flex:1" data-ar="→ الدرس السابق" data-fr="← Cours précédent" data-en="← Prev Lesson">→ الدرس السابق</button>
+        <button type="button" id="mobNextLesson" class="btn btn-primary btn-sm" style="flex:1" data-ar="الدرس التالي ←" data-fr="Cours suivant →" data-en="Next Lesson →">الدرس التالي ←</button>
       </div>
     </div>
     <div class="split-layout">
@@ -52,8 +52,7 @@
     </div>
   </main>
   <footer id="siteFooter"></footer>
-  <script src="./core.js?v=7"></script>
-  <script src="./lang-pack.js?v=7"></script>
+  <script src="./core.js?v=8"></script>
   <script src="./lessons-data.js"></script>
   <script>
     renderSharedChrome('home.html');

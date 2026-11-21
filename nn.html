@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./style.css?v=7" />
+  <link rel="stylesheet" href="./style.css?v=8" />
   
 </head>
 <body>
@@ -17,26 +17,26 @@
     
 <div class="toolbar">
   <div>
-    <h2 style="margin:0">المساعد الذكي C-Mentor AI 2.0</h2>
-    <span class="muted">يفهم العربية والدارجة والفرنسية والإنجليزية — يشرح المفاهيم، يصحح أكواد C، يقارن المفاهيم، ويختبرك.</span>
+    <h2 style="margin:0" data-ar="المساعد الذكي C-Mentor AI 2.0" data-fr="Assistant IA C-Mentor 2.0" data-en="C-Mentor AI 2.0 Tutor">المساعد الذكي C-Mentor AI 2.0</h2>
+    <span class="muted" data-ar="يفهم العربية والدارجة والفرنسية والإنجليزية — يشرح المفاهيم، يصحح أكواد C، يقارن المفاهيم، ويختبرك." data-fr="Comprend AR/FR/EN — explique les concepts, corrige votre code C, compare les notions et vous teste." data-en="Understands AR/FR/EN — explains concepts, debugs pasted C code, compares topics, and quizzes you.">يفهم العربية والدارجة والفرنسية والإنجليزية — يشرح المفاهيم، يصحح أكواد C، يقارن المفاهيم، ويختبرك.</span>
   </div>
-  <button id="clearAiBtn" class="btn btn-soft btn-sm">محادثة جديدة</button>
+  <button id="clearAiBtn" class="btn btn-soft btn-sm" data-ar="محادثة جديدة" data-fr="Nouvelle discussion" data-en="New Chat">محادثة جديدة</button>
 </div>
 
 <div class="pill-group" style="margin-bottom:0.85rem">
-  <button class="pill ai-quick" data-p="اشرح لي المؤشرات (pointers)">شرح المؤشرات</button>
+  <button class="pill ai-quick" data-p="اشرح لي المؤشرات (pointers)" data-ar="شرح المؤشرات" data-fr="Expliquer Pointeurs" data-en="Explain Pointers">شرح المؤشرات</button>
   <button class="pill ai-quick" data-p="ما الفرق بين malloc و calloc؟">malloc vs calloc</button>
-  <button class="pill ai-quick" data-p="ما الفرق بين التمرير بالقيمة والمرجع؟">القيمة vs المرجع</button>
-  <button class="pill ai-quick" data-p="كيفاش نخدم بالقوائم المترابطة linked list؟">القوائم المترابطة</button>
-  <button class="pill ai-quick" data-p="ما سبب خطأ Segmentation Fault؟">حل Segmentation Fault</button>
-  <button class="pill ai-quick" data-p="اختبرني بسؤال في لغة C">اختبرني الآن</button>
+  <button class="pill ai-quick" data-p="ما الفرق بين التمرير بالقيمة والمرجع؟" data-ar="القيمة vs المرجع" data-fr="Valeur vs Référence" data-en="Value vs Reference">القيمة vs المرجع</button>
+  <button class="pill ai-quick" data-p="كيفاش نخدم بالقوائم المترابطة linked list؟" data-ar="القوائم المترابطة" data-fr="Listes Chaînées" data-en="Linked Lists">القوائم المترابطة</button>
+  <button class="pill ai-quick" data-p="ما سبب خطأ Segmentation Fault؟" data-ar="حل Segmentation Fault" data-fr="Corriger SegFault" data-en="Fix SegFault">حل Segmentation Fault</button>
+  <button class="pill ai-quick" data-p="اختبرني بسؤال في لغة C" data-ar="اختبرني الآن" data-fr="Teste-moi !" data-en="Quiz Me Now">اختبرني الآن</button>
 </div>
 
 <div class="chat-box">
   <div id="chatMsgs" class="chat-messages"></div>
   <div class="chat-input-bar">
-    <textarea id="chatInput" rows="2" placeholder="اكتب سؤالك هنا أو الصق كود C لتصحيحه..."></textarea>
-    <button id="chatSend" class="btn btn-primary">إرسال</button>
+    <textarea id="chatInput" rows="2" placeholder="اكتب سؤالك هنا أو الصق كود C لتصحيحه..." data-ph-ar="اكتب سؤالك هنا أو الصق كود C لتصحيحه..." data-ph-fr="Posez votre question ou collez un code C à corriger..." data-ph-en="Ask your question or paste C code to debug..."></textarea>
+    <button id="chatSend" class="btn btn-primary" data-ar="إرسال" data-fr="Envoyer" data-en="Send">إرسال</button>
   </div>
 </div>
 
@@ -91,8 +91,7 @@
 
   </main>
   <footer id="siteFooter"></footer>
-  <script src="./core.js?v=7"></script>
-  <script src="./lang-pack.js?v=7"></script>
+  <script src="./core.js?v=8"></script>
   <script src="./ai-engine.js"></script>
   <script>
     renderSharedChrome('nn.html');
