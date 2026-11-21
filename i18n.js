@@ -264,15 +264,66 @@
     'اكتب رسالتك أو اقتراحك هنا...': { fr: 'Écrivez votre message ou suggestion ici...', en: 'Write your message or suggestion here...' }
   };
 
+  const CODE_TERMS = [
+    ['أدخل عمرك:', { fr: 'Entrez votre âge :', en: 'Enter your age:' }],
+    ['العمر:', { fr: 'Âge :', en: 'Age:' }],
+    ['المعدل:', { fr: 'Moyenne :', en: 'Average:' }],
+    ['المجموع =', { fr: 'Somme =', en: 'Sum =' }],
+    ['النتيجة =', { fr: 'Résultat =', en: 'Result =' }],
+    ['الأكبر =', { fr: 'Max =', en: 'Max =' }],
+    ['الطول:', { fr: 'Longueur :', en: 'Length:' }],
+    ['الطول =', { fr: 'Longueur =', en: 'Length =' }],
+    ['الفهرس =', { fr: 'Indice =', en: 'Index =' }],
+    ['ممتاز', { fr: 'Très Bien', en: 'Excellent' }],
+    ['ناجح', { fr: 'Admis', en: 'Passed' }],
+    ['راسب', { fr: 'Ajourné', en: 'Failed' }],
+    ['موجب', { fr: 'Positif', en: 'Positive' }],
+    ['سالب', { fr: 'Négatif', en: 'Negative' }],
+    ['صفر', { fr: 'Zéro', en: 'Zero' }],
+    ['قسمة صحيحة:', { fr: 'Division entière :', en: 'Integer div:' }],
+    ['قسمة عشرية:', { fr: 'Division réelle :', en: 'Float div:' }],
+    ['الباقي:', { fr: 'Reste :', en: 'Remainder:' }],
+    ['عدد أولي', { fr: 'Nombre premier', en: 'Prime number' }],
+    ['غير أولي', { fr: 'Non premier', en: 'Not prime' }],
+    ['أهلاً بك!', { fr: 'Bienvenue !', en: 'Welcome!' }],
+    ['الاسمان متطابقان!', { fr: 'Les noms sont identiques !', en: 'Names match!' }],
+    ['حالة التوقف', { fr: 'Cas de base', en: 'Base case' }],
+    ['مؤشر فارغ', { fr: 'Pointeur nul', en: 'Null pointer' }],
+    ['سنة كبيسة', { fr: 'Année bissextile', en: 'Leap year' }],
+    ['سنة عادية', { fr: 'Année normale', en: 'Regular year' }],
+    ['الأول:', { fr: 'Premier :', en: 'Top student:' }],
+    ['أكبر قيمة =', { fr: 'Valeur max =', en: 'Max value =' }],
+    ['مجموع القطر الرئيسي =', { fr: 'Somme diagonale =', en: 'Main diagonal sum =' }],
+    ['عدد العناصر =', { fr: 'Nombre d\'éléments =', en: 'Element count =' }],
+    ['العنصر', { fr: 'Élément', en: 'Element' }]
+  ];
+
   function translateTree(lang) {
+    // 1. Fast single-pass UI text translation (never touches scripts/styles/textarea)
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
     let node;
     while ((node = walker.nextNode())) {
       const parent = node.parentElement;
-      if (!parent || parent.closest('pre, code, script, style, textarea')) continue;
+      if (!parent || parent.closest('script, style, textarea')) continue;
+
+      const inCode = Boolean(parent.closest('pre, code'));
       const raw = node.nodeValue;
       const trimmed = raw.trim();
       if (!trimmed) continue;
+
+      if (inCode) {
+        if (!node._origCode) node._origCode = raw;
+        if (lang === 'ar') {
+          if (raw !== node._origCode) node.nodeValue = node._origCode;
+        } else {
+          let updated = node._origCode;
+          for (const [ar, map] of CODE_TERMS) {
+            if (updated.includes(ar)) updated = updated.split(ar).join(map[lang]);
+          }
+          if (raw !== updated) node.nodeValue = updated;
+        }
+        continue;
+      }
 
       if (!node._origAr) node._origAr = trimmed;
       const key = node._origAr;
@@ -285,33 +336,35 @@
       }
     }
 
+    // 2. Translate input placeholders
     document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(el => {
       if (!el.dataset.origPh) el.dataset.origPh = el.placeholder;
       const key = el.dataset.origPh;
-      if (lang === 'ar') el.placeholder = key;
-      else if (PLACEHOLDERS[key] && PLACEHOLDERS[key][lang]) el.placeholder = PLACEHOLDERS[key][lang];
+      const nextPh = (lang === 'ar') ? key : ((PLACEHOLDERS[key] && PLACEHOLDERS[key][lang]) || key);
+      if (el.placeholder !== nextPh) el.placeholder = nextPh;
     });
 
+    // 3. Update footer ONLY if changed (prevents any redundant DOM write)
     const footer = document.getElementById('siteFooter');
-    if (footer) {
+    if (footer && footer.dataset.langRendered !== lang) {
+      footer.dataset.langRendered = lang;
       if (lang === 'fr') footer.innerHTML = 'Algorithmes &amp; C — Plateforme éducative complète • <strong>bibarss39</strong> • Design calme pour apprendre efficacement';
       else if (lang === 'en') footer.innerHTML = 'Algorithms &amp; C — Complete CS Learning Platform • <strong>bibarss39</strong> • Calm focus design for deep understanding';
       else footer.innerHTML = 'Algorithmes &amp; C — منصة تعليمية متكاملة لطلاب لغة C • <strong>bibarss39</strong> • تصميم هادئ للتركيز والفهم العميق';
     }
   }
 
-  let translating = false;
+  let scheduled = false;
   window.applySiteTranslation = function () {
-    if (translating) return;
-    translating = true;
-    try {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
       translateTree((window.appState && window.appState.lang) || 'ar');
-    } finally {
-      translating = false;
-    }
+    });
   };
 
-  // Hook into renderSharedChrome so clicking AR / FR / EN translates immediately
+  // Hook into renderSharedChrome so clicking AR / FR / EN translates once immediately
   const prevRender = window.renderSharedChrome;
   if (typeof prevRender === 'function') {
     window.renderSharedChrome = function (activePage) {
@@ -320,14 +373,18 @@
     };
   }
 
-  // Re-translate automatically when dynamic tabs/lessons/examples re-render
+  // Re-translate cleanly ONLY on user clicks/changes (ZERO MutationObserver loop!)
   document.addEventListener('DOMContentLoaded', () => {
     window.applySiteTranslation();
-    const obs = new MutationObserver(() => {
-      if (!translating && window.appState && window.appState.lang !== 'ar') {
-        window.applySiteTranslation();
+    document.addEventListener('click', (e) => {
+      if (window.appState && window.appState.lang !== 'ar' && e.target.closest('button, select, summary')) {
+        setTimeout(() => window.applySiteTranslation(), 30);
       }
     });
-    obs.observe(document.body, { childList: true, subtree: true });
+    document.addEventListener('change', () => {
+      if (window.appState && window.appState.lang !== 'ar') {
+        setTimeout(() => window.applySiteTranslation(), 30);
+      }
+    });
   });
 })();
